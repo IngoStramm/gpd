@@ -30,7 +30,7 @@ add_filter('wp_insert_post_data', 'gpd_log_transacao_force_published');
 // Força que os posts do "log-transacao" usem o status published
 function gpd_log_transacao_force_published($post)
 {
-    if ('trash' !== $post['post_status'] && 'auto-draft' !== $post['post_status'] && 'future' !== $post['post_status']) { /* We still want to use the trash */
+    if ('trash' !== $post['post_status'] && 'future' !== $post['post_status']) { /* We still want to use the trash */
         if (in_array($post['post_type'], array('page', 'log-transacao'))) {
             $post['post_status'] = 'publish';
         }
@@ -74,8 +74,7 @@ add_action('admin_menu', function () {
     remove_meta_box('tagsdiv-tipo', 'log-transacao', 'normal');
 });
 
-// Atualiza o saldo do usuário quando um post_type "log-transacao" é criado
-// add_action('save_post', 'gpd_log_transacao_updated', 11, 3);
+// Atualiza o saldo do usuário quando o status de um post_type "log-transacao" muda para publicado
 add_action('transition_post_status', 'gpd_log_transacao_updated', 11, 3);
 
 function gpd_log_transacao_updated($new_status, $old_status, $post)
@@ -84,7 +83,6 @@ function gpd_log_transacao_updated($new_status, $old_status, $post)
         return;
 
     $post_ID = $post->ID;
-    // gpd_debug($post_ID);
     $gpd_user_id = get_post_meta($post_ID, 'gpd_log_transacao_user_id', true);
     $gpd_user_saldo_atual = get_user_meta($gpd_user_id, 'gpd_user_saldo', true);
     $gpd_user_saldo_atual = empty($gpd_user_saldo_atual) ? '0' : $gpd_user_saldo_atual;

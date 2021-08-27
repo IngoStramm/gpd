@@ -41,7 +41,13 @@ function gpd_register_user_profile_metabox()
             if (!current_user_can('edit_users'))
                 return;
             $gpd_uder_id = isset($_GET['user_id']) ? $_GET['user_id'] : get_current_user_id();
-            return sprintf(__(' <p>Clique <a href="/wp-admin/post-new.php?post_type=log-transacao&gpd_user_id=%s"><strong>aqui</strong></a> para adicionar ou remover %s do usuário.</p>', 'gpd'), $gpd_uder_id, $gpd_moeda->nome_plural);
+            $gpd_add_bulk_points_page = gpd_get_option('gpd_add_bulk_points_page');
+
+            if (!$gpd_add_bulk_points_page)
+                return;
+            else
+                return sprintf(__(' <p>Clique <a href="%s" target="_blank"><strong>aqui</strong></a> para adicionar ou remover %s do usuário.</p>', 'gpd'), get_permalink($gpd_add_bulk_points_page), $gpd_moeda->nome_plural);
+            // return sprintf(__(' <p>Clique <a href="/wp-admin/post-new.php?post_type=log-transacao&gpd_user_id=%s"><strong>aqui</strong></a> para adicionar ou remover %s do usuário.</p>', 'gpd'), $gpd_uder_id, $gpd_moeda->nome_plural);
         },
 
     ));
