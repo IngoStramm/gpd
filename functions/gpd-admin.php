@@ -391,6 +391,8 @@ function gpd_add_admin_bulk_points_page_link($which)
     global $gpd_moeda;
     if ($which == 'top') {
         $gpd_add_bulk_points_page = gpd_get_option('gpd_add_bulk_points_page');
+        if (!$gpd_add_bulk_points_page)
+            return;
     ?>
         <a href="<?php echo get_permalink($gpd_add_bulk_points_page); ?>" class="button" target="_blank"><?php echo sprintf(__('Adicionar %s em massa', 'gpd'), ucfirst($gpd_moeda->nome_plural)); ?></a>
 <?php
