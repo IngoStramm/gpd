@@ -4,7 +4,7 @@
  * Plugin Name: Gestão por Desempenho
  * Plugin URI: https://agencialaf.com
  * Description: Plugin dos sistema de Gestão por Desempenho.
- * Version: 0.0.2
+ * Version: 0.1.0
  * Author: Ingo Stramm
  * Text Domain: gpd
  * License: GPLv2

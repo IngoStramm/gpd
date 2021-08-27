@@ -1,5 +1,4 @@
 <?php
-
 add_action('admin_head-post.php', 'gpd_log_transacao_hide_publishing_actions');
 add_action('admin_head-post-new.php', 'gpd_log_transacao_hide_publishing_actions');
 
@@ -165,7 +164,7 @@ add_action('save_post', 'gpd_redirect_log_transacao', 999, 3);
 
 function gpd_redirect_log_transacao($post_ID, $post, $update)
 {
-    if (is_admin() && $post->post_type === 'log-transacao') {
+    if (is_admin() && $post->post_type === 'log-transacao' && !wp_doing_ajax()) {
         $gpd_user_id = get_post_meta($post_ID, 'gpd_log_transacao_user_id', true);
 
         if (!$gpd_user_id)
@@ -353,5 +352,47 @@ function gpd_remove_bar_menu_items($wp_admin_bar)
         $wp_admin_bar->remove_node('comments');
         $wp_admin_bar->remove_node('new-content');
         $wp_admin_bar->remove_node('archive');
+    }
+}
+
+
+// Tela de gestão em massa de Pontos
+
+// add_action('admin_menu', 'gpd_bulk_points_menu');
+
+function gpd_bulk_points_menu()
+{
+    global $gpd_moeda;
+    add_submenu_page('users.php', sprintf(__('Adicionar %s em massa', 'gpd'), $gpd_moeda->nome), sprintf(__('%s em massa', 'gpd'), ucfirst($gpd_moeda->nome)), 'edit_others_pages', 'add_bulk_points', 'gpd_bulk_points_page', null);
+}
+
+function gpd_bulk_points_page()
+{
+    global $gpd_moeda;
+?>
+    <div class="wrap">
+        <h1 class="wp-heading"><?php echo sprintf(__('%s em massa', 'gpd'), ucfirst($gpd_moeda->nome)); ?></h1>
+        <label for="usuarios[]" id="usuarios[]"><?php echo __('Selecione os usuários', 'gpd'); ?>
+            <select class="js-example-basic-multiple" name="usuarios[]" multiple="multiple">
+                <option value="option-01">Opção 1</option>
+                <option value="option-02">Opção 2</option>
+                <option value="option-03">Opção 3</option>
+                <option value="option-04">Opção 4</option>
+            </select>
+        </label>
+    </div><!-- /.wrap-->
+    <?php
+}
+
+add_action('manage_users_extra_tablenav', 'gpd_add_admin_bulk_points_page_link');
+
+function gpd_add_admin_bulk_points_page_link($which)
+{
+    global $gpd_moeda;
+    if ($which == 'top') {
+        $gpd_add_bulk_points_page = gpd_get_option('gpd_add_bulk_points_page');
+    ?>
+        <a href="<?php echo get_permalink($gpd_add_bulk_points_page); ?>" class="button" target="_blank"><?php echo sprintf(__('Adicionar %s em massa', 'gpd'), ucfirst($gpd_moeda->nome_plural)); ?></a>
+<?php
     }
 }

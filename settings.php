@@ -2,7 +2,8 @@
 // Controle de exibição das páginas do sistema nos selects de listagem de páginas
 // Previne que uma página que já esteja sendo usada em um select, seja exibida em outro select
 $gpd_pages_array = [
-    'gpd_order_confirmation_page', 'gpd_membership_terms_page', 'gpd_order_rewards_page', 'gpd_password_page'
+    'gpd_order_confirmation_page', 'gpd_membership_terms_page', 'gpd_order_rewards_page',
+    'gpd_password_page', 'gpd_add_bulk_points_page'
 ];
 
 function gpd_exclude_options_pages($current_page)
@@ -41,7 +42,7 @@ add_action('cmb2_admin_init', 'gpd_register_options_metabox');
 
 function gpd_register_options_metabox()
 {
-    global $gpd_pages_array;
+    global $gpd_pages_array, $gpd_moeda;
     /**
      * Registers options page menu item and form.
      */
@@ -157,6 +158,18 @@ function gpd_register_options_metabox()
         'options_cb'   => function () {
             global $gpd_pages_array;
             return gpd_exclude_options_pages($gpd_pages_array[3]);
+        }
+    ));
+
+    $cmb_options->add_field(array(
+        'name'    => sprintf(__('Defina qual é a página de gestão de %s em massa', 'gpd'),
+            $gpd_moeda->nome_plural),
+        'id'      => $gpd_pages_array[4],
+        'type'    => 'select',
+        'show_option_none' => true,
+        'options_cb'   => function () {
+            global $gpd_pages_array;
+            return gpd_exclude_options_pages($gpd_pages_array[4]);
         }
     ));
 }
