@@ -483,7 +483,7 @@ function gpd_add_bulk_points_page_form_output()
             </div>
         </div>';
 
-    $output .= wp_nonce_field('gpd_add_bulk_points_form_action', 'gpd_add_bulk_points_form_nonce_field');
+    $output .= wp_nonce_field('gpd_add_bulk_points_form_action', 'gpd_add_bulk_points_form_nonce_field', true, false);
 
     $output .=
         '<div class="form-group">
@@ -504,6 +504,8 @@ function gpd_add_bulk_points_page_form_output()
     $output .= '<div class="clearfix" style="margin-bottom: 40px;"></div>';
 
     $output .= '<h4 class="table-title"><figure class="icon"><img src="' . get_template_directory_uri() . '/assets/images/transacoes.png" /></figure>' . __('Selecione os usuários', 'gpd') . '</h4>';
+
+    // Ok para baixao
 
     $output .= '<div class="table-responsive">';
     $output .= '<table id="gpd-table-saldo" class="table gpd-table gpd-table-saldo table-condensed">';
