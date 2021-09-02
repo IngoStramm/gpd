@@ -6,13 +6,16 @@ function gpd_sort_recompensas($query)
     if ($query->is_main_query() && !is_admin()) {
         if ($query->is_tax() || $query->is_post_type_archive('recompensas')) {
             $gpd_order = 'ASC';
-            $query->set('orderby', 'name');
+            $query->set('meta_key', 'gpd_recompensa_preco');
+            $query->set('orderby', 'meta_value_num');
             if (isset($_GET['gpd_sort_recompensa']) && $_GET['gpd_sort_recompensa']) {
                 $gpd_sort_recompensa = $_GET['gpd_sort_recompensa'];
                 if ($gpd_sort_recompensa != 'nome') {
                     $gpd_order = $gpd_sort_recompensa == 'preco_desc' ? 'DESC' : 'ASC';
                     $query->set('meta_key', 'gpd_recompensa_preco');
                     $query->set('orderby', 'meta_value_num');
+                } else {
+                    $query->set('orderby', 'name');
                 }
                 // gpd_debug($query);
             }
@@ -50,11 +53,11 @@ function gpd_show_recompensas_filters()
                     <form action="" class="gpd-sorting-form form-inline" method="get">
                         <select name="gpd_sort_recompensa" class="orderby form-control" onchange="this.form.submit()">
                             <?php
-                            $gpd_selected = isset($_GET['gpd_sort_recompensa']) ? $_GET['gpd_sort_recompensa'] : 'nome';
+                            $gpd_selected = isset($_GET['gpd_sort_recompensa']) ? $_GET['gpd_sort_recompensa'] : 'preco_asc';
                             $gpd_sorting_options = [];
-                            $gpd_sorting_options['nome'] = __('Padrão', 'gpd');
-                            $gpd_sorting_options['preco_desc'] = __('Valor: do maior para o menor', 'gpd');
                             $gpd_sorting_options['preco_asc'] = __('Valor: do menor para o maior', 'gpd');
+                            $gpd_sorting_options['preco_desc'] = __('Valor: do maior para o menor', 'gpd');
+                            $gpd_sorting_options['nome'] = __('Nome: ordem alfabética', 'gpd');
                             foreach ($gpd_sorting_options as $k => $v) {
                                 echo '<option value="' . $k . '"';
                                 if ($gpd_selected == $k) echo ' selected';
@@ -69,7 +72,7 @@ function gpd_show_recompensas_filters()
             <!-- /.col-md-4 -->
 
             <div class="clearfix visible-xs" style="margin-bottom: 20px;"></div>
-            
+
         <?php } ?>
     </div>
     <!-- /.row -->
