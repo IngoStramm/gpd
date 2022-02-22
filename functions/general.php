@@ -18,7 +18,7 @@ function gdp_current_balance($gpd_user_id = null)
     return $gpd_user_saldo;
 }
 
-// Remove o admin bar para todos os usuários que não seja administradores
+// Remove o admin bar para todos os usuários que não sejam administradores
 add_action('after_setup_theme', 'gpd_remove_admin_bar');
 
 function gpd_remove_admin_bar()

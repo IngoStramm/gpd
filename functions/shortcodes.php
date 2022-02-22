@@ -322,7 +322,7 @@ function gpd_user_saldo_view()
 {
     $output = '';
     // $output .= gpd_user_saldo_header();
-    $output .= gpd_user_lancamentos_futuros_table();
+    // $output .= gpd_user_lancamentos_futuros_table();
     $output .= gpd_user_saldo_table();
     return $output;
 }
