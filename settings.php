@@ -38,6 +38,17 @@ function gpd_exclude_options_pages($current_page)
     return $pages_options;
 }
 
+function gpd_return_users()
+{
+
+    $users = get_users(array('role__in' => array('author', 'editor')));
+    $users_arr = [];
+    foreach ($users as $user) {
+        $users_arr[$user->ID] = $user->display_name;
+    }
+    return $users_arr;
+}
+
 add_action('cmb2_admin_init', 'gpd_register_options_metabox');
 
 function gpd_register_options_metabox()
@@ -52,7 +63,7 @@ function gpd_register_options_metabox()
         'object_types' => array('options-page'),
         'option_key'      => 'gpd_options', // The option key and admin menu page slug.
         'icon_url'        => 'dashicons-admin-generic', // Menu icon. Only applicable if 'parent_slug' is left empty.
-        'menu_title'      => esc_html__('Opções', 'gpd' ), // Falls back to 'title' (above).
+        'menu_title'      => esc_html__('Opções', 'gpd'), // Falls back to 'title' (above).
         // 'parent_slug'     => 'themes.php', // Make options page a submenu item of the themes menu.
         // 'capability'      => 'manage_options', // Cap required to view options-page.
         // 'position'        => 1, // Menu position. Only applicable if 'parent_slug' is left empty.
@@ -67,7 +78,7 @@ function gpd_register_options_metabox()
     //     'id'      => 'gpd_notifications_settings_title',
     //     'type'    => 'title',
     // ));
-    
+
     // $cmb_options->add_field(array(
     //     'name'    => __('E-mails que receberão os avisos de novos resgates', 'gpd'),
     //     'id'      => 'gpd_notifications_email',
@@ -138,7 +149,7 @@ function gpd_register_options_metabox()
             return gpd_exclude_options_pages($gpd_pages_array[1]);
         }
     ));
-    
+
     $cmb_options->add_field(array(
         'name'    => __('Defina qual é a página usada como listagem das recompensas resgatadas', 'gpd'),
         'id'      => $gpd_pages_array[2],
@@ -162,8 +173,10 @@ function gpd_register_options_metabox()
     ));
 
     $cmb_options->add_field(array(
-        'name'    => sprintf(__('Defina qual é a página de gestão de %s em massa', 'gpd'),
-            $gpd_moeda->nome_plural),
+        'name'    => sprintf(
+            __('Defina qual é a página de gestão de %s em massa', 'gpd'),
+            $gpd_moeda->nome_plural
+        ),
         'id'      => $gpd_pages_array[4],
         'type'    => 'select',
         'show_option_none' => true,
@@ -171,6 +184,21 @@ function gpd_register_options_metabox()
             global $gpd_pages_array;
             return gpd_exclude_options_pages($gpd_pages_array[4]);
         }
+    ));
+
+    $cmb_options->add_field(array(
+        'name'    => __('Acesso Financeiro', 'gpd'),
+        'desc'    => __('Defina quais serão os usuários que terão acesso as áreas "Resgate" e "Recompensas".', 'gpd'),
+        'id'      => 'gpd_billing_users_title',
+        'type'    => 'title',
+    ));
+
+    $cmb_options->add_field(array(
+        'name'    => __('selecione os usuários', 'gpd'),
+        'desc'    => __('Apenas os usuários com a função "editor" e "autor" aparecem nesta listagem.', 'gpd'),
+        'id'      => 'gpd_billing_users',
+        'type'    => 'multicheck',
+        'options_cb' => 'gpd_return_users',
     ));
 }
 
@@ -210,7 +238,6 @@ function gpd_register_notifications_options_metabox()
         'type'    => 'text_email',
         'repeatable'   => true
     ));
-
 }
 
 
@@ -230,7 +257,7 @@ function gpd_register_banner_options_metabox()
         'icon_url'        => 'dashicons-admin-generic', // Menu icon. Only applicable if 'parent_slug' is left empty.
         // 'menu_title'      => esc_html__( 'Options', 'gpd' ), // Falls back to 'title' (above).
         'parent_slug'     => 'gpd_options', // Make options page a submenu item of the themes menu.
-        'capability'      => 'edit_others_pages', // Cap required to view options-page.
+        'capability'      => 'edit_others_posts', // Cap required to view options-page.
         // 'position'        => 1, // Menu position. Only applicable if 'parent_slug' is left empty.
         // 'admin_menu_hook' => 'network_admin_menu', // 'network_admin_menu' to add network-level options page.
         // 'display_cb'      => false, // Override the options-page form output (CMB2_Hookup::options_page_output()).
@@ -258,7 +285,7 @@ function gpd_register_banner_options_metabox()
         'id'      => 'gpd_banner_image',
         'type'    => 'file',
     ));
-    
+
     $cmb_group->add_group_field($group_field_id, array(
         'name'    => __('Url do Slide', 'gpd'),
         // 'desc'    => __('Opções do banner usado nas páginas internas.', 'gpd'),
@@ -334,6 +361,27 @@ function gpd_get_banner($key = '', $default = false)
         $val = $opts;
     } elseif (is_array($opts) && array_key_exists($key, $opts) && false !== $opts[$key]) {
         $val = $opts[$key];
+    }
+
+    return $val;
+}
+
+function gpd_get_gpd_billing_users($default = false)
+{
+    if (function_exists('cmb2_get_option')) {
+        // Use cmb2_get_option as it passes through some key filters.
+        return cmb2_get_option('gpd_options', 'gpd_billing_users', $default);
+    }
+
+    // Fallback to get_option if CMB2 is not loaded yet.
+    $opts = get_option('gpd_options', $default);
+
+    $val = $default;
+
+    if ('all' == 'gpd_billing_users') {
+        $val = $opts;
+    } elseif (is_array($opts) && array_key_exists('gpd_billing_users', $opts) && false !== $opts['gpd_billing_users']) {
+        $val = $opts['gpd_billing_users'];
     }
 
     return $val;

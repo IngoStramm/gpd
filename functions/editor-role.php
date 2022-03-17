@@ -47,3 +47,22 @@ function gpd_pre_user_query($user_search)
             );
     }
 }
+
+// Adiciona a permissão para editar o banner para roles específicos 
+// baseado em uma capabillity customizada
+// add_action('init', 'gpd_add_custom_caps', 11);
+
+function gpd_add_custom_caps()
+{
+    $roles = array(
+        'administrator',
+        'editor',
+        'author',
+        'contributor',
+    );
+
+    foreach ($roles as $role_name) {
+        $role_obj = get_role($role_name);
+        $role_obj->remove_cap('gpd_billing_access', true);
+    }
+}

@@ -1,7 +1,7 @@
 {
     "name": "gpd",
     "description": "Plugin dos sistema de Gestão por Desempenho.",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "title": "Gestão por Desempenho",
     "homepage": "https://agencialaf.com",
     "main": "Gruntfile.js",

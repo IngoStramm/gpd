@@ -290,9 +290,9 @@ function gpd_admin_style()
 <?php
 }
 
-add_action('init', 'gpd_checka_administrador');
+add_action('init', 'gpd_check_administrador');
 
-function gpd_checka_administrador()
+function gpd_check_administrador()
 {
     $user = wp_get_current_user();
     $roles = (array) $user->roles;
@@ -335,6 +335,32 @@ function gpd_custom_admin()
         remove_menu_page('themes.php');                     //Appearance
         remove_menu_page('tools.php');                      //Tools
         remove_menu_page('edit-comments.php');              //Comentários
+    }
+}
+
+add_action('init', 'gpd_check_billing_users');
+
+function gpd_check_billing_users()
+{
+    $user = wp_get_current_user();
+    $roles = (array) $user->roles;
+    if (isset($roles[0]) && $roles[0] === 'administrator')
+        return;
+
+    $gpd_billing_users = gpd_get_gpd_billing_users();
+
+    if (!$gpd_billing_users)
+        $gpd_billing_users = [];
+
+    $current_user_id = get_current_user_id();
+    // gpd_debug($gpd_billing_users);
+    // gpd_debug($current_user_id);
+    if (!in_array($current_user_id, $gpd_billing_users)) {
+        // gpd_debug(in_array($current_user_id, $gpd_billing_users));
+        add_action('admin_menu', function () {
+            remove_menu_page('edit.php?post_type=resgate');
+            remove_menu_page('edit.php?post_type=recompensas');
+        });
     }
 }
 

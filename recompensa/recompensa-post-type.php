@@ -31,6 +31,7 @@ function gpd_recompensa_cpt()
         array(
             'supports' => array('title', 'editor', 'thumbnail', 'revisions', 'author'),
             'menu_icon'         => 'dashicons-awards',
+            'capability_type'     => 'page'
         )
     );
 }

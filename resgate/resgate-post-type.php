@@ -33,6 +33,7 @@ function gpd_resgate_cpt()
             'menu_icon' => 'dashicons-cart',
             'show_in_nav_menus' => false,
             'show_in_admin_bar' => false,
+            'capability_type'     => 'page'
         )
     );
 }
