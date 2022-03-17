@@ -222,7 +222,7 @@ function gpd_register_banner_options_metabox()
     /**
      * Registers options page menu item and form.
      */
-    $cmb_options = new_cmb2_box(array(
+    $cmb_group = new_cmb2_box(array(
         'id'           => 'gpd_banner_option_metabox',
         'title'        => esc_html__('Banner', 'gpd'),
         'object_types' => array('options-page'),
@@ -237,18 +237,36 @@ function gpd_register_banner_options_metabox()
         // 'save_button'     => esc_html__( 'Save Theme Options', 'gpd' ), // The text for the options-page save button. Defaults to 'Save'.
     ));
 
-    $cmb_options->add_field(array(
-        'name'    => __('Banner', 'gpd'),
-        'desc'    => __('Opções do banner usado nas páginas internas.', 'gpd'),
-        'id'      => 'gpd_banner_settings_title',
-        'type'    => 'title',
+    $group_field_id = $cmb_group->add_field(array(
+        'id'          => 'gpd_banner_group_metabox',
+        'type'        => 'group',
+        'description' => '<h1>' . esc_html__('Opções do Banner', 'cmb2') . '</h1>',
+        'options'     => array(
+            'group_title'    => esc_html__('Slide {#}', 'gpd'), // {#} gets replaced by row number
+            'add_button'     => esc_html__('Adicionar novo Slide', 'gpd'),
+            'remove_button'  => esc_html__('Remover Slide', 'gpd'),
+            'sortable'       => true,
+            // 'closed'      => true, // true to have the groups closed by default
+            // 'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'cmb2' ), // Performs confirmation before removing group.
+        ),
+    ));
+
+
+    $cmb_group->add_group_field($group_field_id, array(
+        'name'    => __('Selecione uma imagem para ser usada neste slide', 'gpd'),
+        'desc'    => __('Dimensões recomendadas: <strong>1200px de largura</strong> e <strong>282px de altura</strong>.</br>Ferramenta online para diminuir o peso (KBs) da imagem: <a href="https://tinypng.com/" target="_blank">Tiny PNG</a>.', 'gpd'),
+        'id'      => 'gpd_banner_image',
+        'type'    => 'file',
     ));
     
-    $cmb_options->add_field(array(
-        'name'    => __('Selecione uma imagem para ser usada como banner', 'gpd'),
-        'desc'    => __('Dimensões recomendadas: <strong>1200px de largura</strong> e <strong>282px de altura</strong>.</br>Ferramenta online para diminuir o peso da imagem: <a href="https://tinypng.com/" target="_blank">Tiny PNG</a>.', 'gpd'),
-        'id'      => 'gpd_banner',
-        'type'    => 'file',
+    $cmb_group->add_group_field($group_field_id, array(
+        'name'    => __('Url do Slide', 'gpd'),
+        // 'desc'    => __('Opções do banner usado nas páginas internas.', 'gpd'),
+        'id'      => 'gpd_banner_url',
+        'type'    => 'text_url',
+        'attributes' => array(
+            'placeholder' => 'https://'
+        )
     ));
 }
 
