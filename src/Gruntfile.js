@@ -4,8 +4,9 @@ module.exports = function (grunt) {
 
     const sass = require('node-sass');
     require('load-grunt-tasks')(grunt);
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
-    var odinConfig = {
+    var gpdConfig = {
 
         // gets the package vars
         pkg: grunt.file.readJSON('package.json'),
@@ -44,7 +45,7 @@ module.exports = function (grunt) {
         sass: {
             options: {
                 implementation: sass,
-                // sourceMap: true,
+                sourceMap: true,
                 style: 'compressed'
             },
             dist: {
@@ -129,7 +130,7 @@ module.exports = function (grunt) {
 
     // Initialize Grunt Config
     // --------------------------
-    grunt.initConfig(odinConfig);
+    grunt.initConfig(gpdConfig);
 
     // Register Tasks
     // --------------------------
